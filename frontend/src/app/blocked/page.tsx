@@ -1,3 +1,5 @@
+'use client'
+
 export default function BlockedPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-4">
@@ -55,6 +57,17 @@ export default function BlockedPage() {
               <p>If you believe this is an error,</p>
               <p>please contact the garden keeper directly.</p>
             </div>
+
+            {/* Development Override Button */}
+            <button 
+              onClick={() => {
+                document.cookie = `location-verified=true; max-age=${60 * 60 * 24}; path=/`
+                window.location.href = '/password'
+              }}
+              className="mt-6 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded-lg transition-colors"
+            >
+              🧪 Developer Override (Testing Only)
+            </button>
 
             {/* Decorative Bottom */}
             <div className="mt-8 flex justify-center space-x-6 text-xl opacity-30">
