@@ -1,26 +1,259 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Kasumi Jirai Kei Theme Variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors */
+  --kasumi-primary: #ff69b4;        /* Hot pink */
+  --kasumi-secondary: #ff1493;      /* Deep pink */
+  --kasumi-accent: #ff6b9d;         /* Soft pink */
+  --kasumi-bg: #0a0a0a;             /* Almost black */
+  --kasumi-bg-secondary: #1a1a1a;   /* Dark grey */
+  --kasumi-text: #ffffff;           /* Pure white */
+  --kasumi-text-muted: #cccccc;     /* Light grey */
+  
+  /* Jirai Kei Specific */
+  --kasumi-bow: #ff69b4;            /* Bow pink */
+  --kasumi-cross: #ff1493;          /* Cross deep pink */
+  --kasumi-shadow: 0 8px 32px rgba(255, 105, 180, 0.3);
+  --kasumi-shadow-strong: 0 12px 48px rgba(255, 105, 180, 0.5);
+  --kasumi-border: rgba(255, 105, 180, 0.3);
+  
+  /* Gradient Backgrounds */
+  --kasumi-gradient-main: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a1a2a 100%);
+  --kasumi-gradient-card: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  --kasumi-gradient-button: linear-gradient(45deg, #ff69b4, #ff1493);
+  --kasumi-gradient-accent: linear-gradient(90deg, #ff6b9d, #ff69b4, #ff1493);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--kasumi-bg);
+  color: var(--kasumi-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--kasumi-gradient-main);
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--kasumi-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--kasumi-gradient-button);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--kasumi-secondary);
+}
+
+/* Kasumi Component Classes */
+@layer components {
+  /* Buttons */
+  .kasumi-btn-primary {
+    @apply px-6 py-3 rounded-2xl font-semibold text-white transition-all duration-300;
+    background: var(--kasumi-gradient-button);
+    box-shadow: var(--kasumi-shadow);
+    border: 2px solid transparent;
+  }
+  
+  .kasumi-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--kasumi-shadow-strong);
+    border-color: var(--kasumi-text);
+  }
+  
+  .kasumi-btn-secondary {
+    @apply px-6 py-3 rounded-2xl font-semibold transition-all duration-300;
+    background: transparent;
+    border: 2px solid var(--kasumi-primary);
+    color: var(--kasumi-primary);
+  }
+  
+  .kasumi-btn-secondary:hover {
+    background: var(--kasumi-primary);
+    color: var(--kasumi-bg);
+    transform: translateY(-2px);
+  }
+  
+  /* Cards */
+  .kasumi-card {
+    background: var(--kasumi-gradient-card);
+    border: 2px solid var(--kasumi-border);
+    border-radius: 20px;
+    box-shadow: var(--kasumi-shadow);
+    padding: 24px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .kasumi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--kasumi-shadow-strong);
+    border-color: var(--kasumi-primary);
+  }
+  
+  /* Card with bow decoration */
+  .kasumi-card-bow::before {
+    content: "🎀";
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 24px;
+    z-index: 10;
+  }
+  
+  /* Card with cross decoration */
+  .kasumi-card-cross::after {
+    content: "✟";
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    color: var(--kasumi-cross);
+    font-size: 16px;
+    opacity: 0.6;
+  }
+  
+  /* Inputs */
+  .kasumi-input {
+    @apply w-full px-4 py-3 rounded-xl text-white placeholder-gray-400;
+    background: var(--kasumi-bg-secondary);
+    border: 2px solid var(--kasumi-border);
+    transition: all 0.3s ease;
+  }
+  
+  .kasumi-input:focus {
+    outline: none;
+    border-color: var(--kasumi-primary);
+    box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+  }
+  
+  /* Navigation */
+  .kasumi-nav {
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--kasumi-border);
+  }
+  
+  /* Special Effects */
+  .kasumi-glow {
+    position: relative;
+  }
+  
+  .kasumi-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--kasumi-gradient-accent);
+    opacity: 0;
+    border-radius: inherit;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
+  
+  .kasumi-glow:hover::before {
+    opacity: 0.1;
+  }
+  
+  /* Text Styles */
+  .kasumi-title {
+    background: var(--kasumi-gradient-accent);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+  
+  .kasumi-subtitle {
+    color: var(--kasumi-text-muted);
+    font-weight: 500;
+  }
+  
+  /* Loading Animation */
+  .kasumi-loading {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .kasumi-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.4), transparent);
+    animation: kasumi-shimmer 1.5s infinite;
+  }
+  
+  @keyframes kasumi-shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  
+  /* Floating Animation for decorative elements */
+  .kasumi-float {
+    animation: kasumi-float 3s ease-in-out infinite;
+  }
+  
+  @keyframes kasumi-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  /* Pulse Animation */
+  .kasumi-pulse {
+    animation: kasumi-pulse 2s infinite;
+  }
+  
+  @keyframes kasumi-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(255, 105, 180, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 105, 180, 0); }
+  }
+}
+
+/* Utility Classes */
+.text-gradient {
+  background: var(--kasumi-gradient-accent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .kasumi-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+  
+  .kasumi-btn-primary,
+  .kasumi-btn-secondary {
+    padding: 12px 20px;
+    border-radius: 16px;
+  }
 }
