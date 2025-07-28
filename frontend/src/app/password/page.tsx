@@ -13,38 +13,52 @@ export default function PasswordPage() {
   useEffect(() => {
     // Check user's location when page loads
     checkLocation()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkLocation = () => {
     if (!navigator.geolocation) {
+      console.log('Geolocation not supported, redirecting to blocked')
       setLocationStatus('blocked')
+      router.push('/blocked')
       return
     }
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords
+        console.log('User location:', latitude, longitude)
         
         // Manchester coordinates and 5km radius check
         const manchesterLat = 53.4808
         const manchesterLng = -2.2426
         const distance = calculateDistance(latitude, longitude, manchesterLat, manchesterLng)
+        console.log('Distance from Manchester:', distance, 'km')
         
         if (distance <= 5) {
+          console.log('User in Manchester area, allowing access')
           setLocationStatus('allowed')
-          // Set location headers for middleware
           document.cookie = `location-verified=true; max-age=${60 * 60 * 24}; path=/`
         } else {
+          console.log('User outside Manchester area, blocking access')
           setLocationStatus('blocked')
           router.push('/blocked')
         }
       },
       (error) => {
-        console.error('Location error:', error)
-        setLocationStatus('blocked')
-        router.push('/blocked')
+        console.log('Geolocation error:', error.message)
+        // For development, let's be more permissive with location errors
+        if (error.code === error.PERMISSION_DENIED) {
+          console.log('Location permission denied, redirecting to blocked')
+          setLocationStatus('blocked')
+          router.push('/blocked')
+        } else {
+          // For timeout or other errors, allow access for now
+          console.log('Location error but allowing access for development')
+          setLocationStatus('allowed')
+          document.cookie = `location-verified=true; max-age=${60 * 60 * 24}; path=/`
+        }
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
     )
   }
 
